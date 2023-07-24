@@ -1,0 +1,136 @@
+<html>
+    <script src="https://d3js.org/d3.v5.min.js"> </script>
+    <script src="CS416DataVis.js"></script>
+    <link rel="stylesheet" href="index.css">
+    <body onload='init()'>
+     <!--    TODO 
+        GLOBAL
+        CREATE RESET BUTTON
+        SCENE 1
+        CREATE DROPDOWN FOR YEAR(NONE)
+        CREATE SCATTER PLOT TO CO2 TOTAL
+        CREATE AXIS
+        CREATE ON CLICK EVENT TO MOVE TO SCENE 2
+        CREATE ON HOVER PROVIDE DETAILS ON DEMAND
+        SCENE 2
+        ANOTATION FOR COUNTRY
+        YEAR RANGE SELECTED
+        CREATE LINE CHART 
+        CREATE SLIDER FOR END YEAR
+        CREATE SLIDER FOR START YEAR(OPTIONAL)
+        VALIDATE INPUT
+        CREATE LINE CHART FOR DATA FOR THAT COUNTRY IN THAT YEAR RANGE
+        ON HOVER PROVIDE POPULATION AND BREAKDOWN OF DIFFERENT EMISSIONS
+        TOTAL EMISSIONS
+        SCENE 3
+        ANNOTATION FOR POPULATION OF THIS YEAR AND COUNTRY
+        CREATE ANOTATION LABEL OF YEAR, COUNTRY
+        CREATE BAR CHART FOR EACH KIND OF CO2 EMISSION
+        CREATE AXIS THAT HAS TYPE AND AMOUNT
+        CREATE ON HOVER EVENT THAT HAS MORE DETAIL
+        --> 
+        <!-- Scene 1 -->
+        <div id="scene1" style="margin-bottom: 5%; margin-top: 1%;">
+            <h1 style="margin-left: 5%;"> How Populaton Effects Co2 Emissions Annually</h1>
+            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 0px;">Filters</h2>
+            <div id="tooltip1" style="z-index: -1;" hidden>
+                <strong><p id="tooltipcountry" style="margin-left: 30%"></p></strong>
+                <p><strong><span>Oil Co2: </span></strong><span id="tooltipoil"></span></p>
+                <p><strong><span>Cement Co2: </span></strong><span id="tooltipcement"></span></p>
+                <p><strong><span>Coal Co2: </span></strong><span id="tooltipcoal"></span></p>
+                <p><strong><span>Consumption Co2: </span></strong><span id="tooltipconsumption"></span></p>
+                <p><strong><span>Flaring Co2: </span></strong><span id="tooltipflaring"></span></p>
+                <p><strong><span>Gas Co2: </span></strong><span id="tooltipgas"></span></p>
+                <p><strong><span>Trade Co2: </span></strong><span id="tooltiptrade"></span></p>
+            </div>
+            <div id=tooltip1x hidden>
+                <p><strong><span>Co2: </span></strong><span id="tooltipCo2"></span></p>
+            </div>
+            <div id=tooltip1y hidden>
+                <p><strong><span>Pop: </span></strong><span id="tooltipPop"></span></p>
+            </div>
+            <div id="scene1FilterContainer" style="width:25%; height: 65%; float:left; margin-top: 1%; margin-left: 5%;">
+                <div id="filterCheckboxesContainer" style="border: 5px; border-style: inset; float:left; width: 50%; height: 100%; overflow-y:scroll; background: whitesmoke; padding: 3%;">
+                    <label>Select All<input checked=true type="checkbox" onClick="toggleAll(this)"></label>
+                    <form id="filterCheckboxes" style=" display: flex; flex-wrap: wrap;">
+                    </form>
+                </div>
+   
+                <div id="filterDropdown" style="float:right; width:30%; background: whitesmoke; padding: 3%; border: 5px; border-style: inset;">
+                    <p>Filter by Year</p>
+                    <select id="YearDropdown" style="width:75%">
+                    </select>
+                    <p id="YearOutput" hidden></p>
+                </div>
+            </div>
+        </div>
+
+        <svg id="scene1svg" width="70%" height="65%" style="float:right;">
+                
+        </svg>
+
+        <!-- Scene 2 -->
+        <div id="scene2" style="width: 100%; top: 90%; position: absolute;">
+            <h1 style="margin-left: 5%;"> How <span id="countryTitle2"></span> Co2 Emissions Have Changed Year Over year</h1>
+            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 3%;">About</h2>
+            <div id="tooltip2" style="z-index: -1;" hidden>
+                <strong><p id="tooltipcountry" style="margin-left: 30%"></p></strong>
+                <p><strong><span>Oil Co2: </span></strong><span id="tooltipoil2"></span></p>
+                <p><strong><span>Cement Co2: </span></strong><span id="tooltipcement2"></span></p>
+                <p><strong><span>Coal Co2: </span></strong><span id="tooltipcoal2"></span></p>
+                <p><strong><span>Consumption Co2: </span></strong><span id="tooltipconsumption2"></span></p>
+                <p><strong><span>Flaring Co2: </span></strong><span id="tooltipflaring2"></span></p>
+                <p><strong><span>Gas Co2: </span></strong><span id="tooltipgas2"></span></p>
+                <p><strong><span>Trade Co2: </span></strong><span id="tooltiptrade2"></span></p>
+            </div>
+            <div id=tooltip2x hidden>
+                <p><strong><span>Year: </span></strong><span id="tooltipYear2"></span></p>
+            </div>
+            <div id=tooltip2y hidden>
+                <p><strong><span>Co2: </span></strong><span id="tooltipCo22"></span></p>
+            </div>
+            <div id="scene2AboutContainer" style="border: 5px; border-style: inset; margin-left: 5%; width: 20%; background: whitesmoke; padding: 2%;">
+                <p> Country: <span id="CountryOutput2"></span></p>
+                <p> Year Range: <span id="start"></span> <span>-</span> <span id="end"></span></p>
+            </div>
+            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 3%;">Filters</h2>
+            <div class="slidecontainer" style="border: 5px; border-style: inset; margin-left: 5%; width: 20%; background: whitesmoke; padding: 2%; padding-bottom: 5%;">
+                <label style="float:left; margin-top: 1%; margin-bottom: 1%">Start Year</label><input type="range" min=1980 max=2021 value=1979 class="slider" id="StartDateRange" style="margin: 1%; float:right">
+                <label style="float:left; margin-top: 1%; margin-bottom: 1%">End Year</label><input type="range" min=1980 max=2021 value=2000 class="slider" id="EndDateRange" style="margin: 1%; float:right">
+            </div>
+        </div>
+
+        <svg id="scene2svg" width="65%" height="95%" style="float:right; top: 90%; position: absolute; left: 35%;">
+        </svg>
+
+
+        <!-- Scene 3 -->
+        <div id="scene3" style="width: 100%; top: 180%; position: absolute;">
+            <h1 style="margin-left: 5%;"> Breakdown of <span id="countryTitle3"></span> Co2 Emissions For a Specific Year </h1>
+            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 1%;">About</h2>
+            <div id="scene2AboutContainer" style="border: 5px; border-style: inset; margin-left: 5%; width: 20%; background: whitesmoke; padding: 2%;">
+                <p> Country: <span id="CountryOutput3"></span></span>
+                <p> Year: <span id="YearOutput3"></span></span>
+            </div>
+            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 1%;">Filters</h2>
+            <div id="tooltip3">
+            </div>
+            <div id="filterDropdown3" style="margin-left: 5%; float:left; width:17%; background: whitesmoke; padding: 3%; border: 5px; border-style: inset;">
+                <div style="float: left;">
+                    <p>Filter by Year</p>
+                    <select id="YearDropdown3">
+                    </select>
+                </div>
+                <div style="float: left;">
+                    <p>Filter by Country</p>
+                    <select id="CountryDropdown3">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <svg id="scene3svg" width="65%" height="110%" style="top: 200%; position: absolute; left: 35%; margin-bottom: 15%">
+        </svg>
+
+    </body>
+</html>
