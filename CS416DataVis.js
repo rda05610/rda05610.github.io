@@ -51,15 +51,33 @@ function initScatter(input) {
     let width = screen.width
     var marginx = 50
     var marginy = 50
-
-    var scaleX = d3.scaleLog().domain([10000,450000000]).range([50,width * .55])
+                                             //982372480
+    var scaleX = d3.scaleLog().domain([10000,1000000000]).range([50,width * .55])
     var scaleY = d3.scaleLog().domain([0.025,5000]).range([height * .4,15])
     var scaleRad =  d3.scaleLog().domain([21,750000000]).range([2,10])
+    var scaleColor = d3.scaleLinear().domain([0.025,400]).range(["cornflowerblue", "red"])
 
+    console.log(eval((height * .45)+50))
+    console.log(eval((height * .45)))
     d3.select('#scene1svg')
         .selectAll("g")
         .remove();
-
+    d3.select('#scene1svg')
+        .append('g')
+        .attr("transform","translate("+eval((marginx*2)-5)+","+eval(marginy)+")")
+        .call(d3
+            .axisLeft()
+            .scale(scaleY)
+            .ticks(5)
+            .tickFormat((d, i) => [.1, 1, 10, 100, 1000, 10000][i]))
+    d3.select('#scene1svg')
+        .append('g')
+        .attr("transform","translate("+marginx+","+eval((height*.4)+marginy+5)+")")
+        .call(d3
+            .axisBottom()
+            .scale(scaleX)
+            .ticks(5)
+            .tickFormat((d, i) => [10000, 100000, 1000000, 10000000, 100000000,1000000000][i]))
     d3.select('#scene1svg')
         .append("g")
         .attr("transform","translate("+marginx+","+marginy+")")
@@ -74,17 +92,14 @@ function initScatter(input) {
             .attr("r", function(d) {return scaleRad(d.population);})
             .attr("stroke", "black")
             .attr("stroke-width", "1")
-            .attr("fill", "gray")
+            .attr("fill", function(d) { return scaleColor(d.co2);})
             .on("mouseover",function(d) {
-                var xLine = d3.line()
-                    .x(d => scaleX(d.population))
-                    .y(d => scaleY(d.co2));
                 d3.select("#scene1svg")
                     .append("g")
                         .attr("transform","translate("+marginx+","+marginy+")")
                     .append("line")        
                         .style("stroke", "black")
-                        .attr("x1", 0)    
+                        .attr("x1", marginy-5)    
                         .attr("y1", scaleY(d.co2))     
                         .attr("x2", scaleX(d.population)-5)     
                         .attr("y2", scaleY(d.co2))
@@ -97,15 +112,13 @@ function initScatter(input) {
                         .attr("x1", scaleX(d.population))    
                         .attr("y1", scaleY(d.co2)+5)     
                         .attr("x2", scaleX(d.population))     
-                        .attr("y2", height * .4,15)
+                        .attr("y2", height * .4+5)
                         .attr("class", "test1")
-                d3.select(this).style("fill", "red")
+                d3.select(this).style("fill", "lightgray")
                 d3.select(this).style("stroke-width", "2")
-                d3.select(this).style("r", function(d) {return scaleRad(d.population) + 1})
+                d3.select(this).style("r", function(d) {return scaleRad(d.population) + 5})
                 var tooltip = document.getElementById("tooltip1");
                 
-                tooltip.style.left = eval(d3.event.clientX-200)+"px"
-                tooltip.style.top = eval(d3.event.clientY-250)+"px"
                 tooltip.style.opacity = 1;
                 tooltip.style.position = "absolute"
                 tooltip.style.zIndex = 1
@@ -155,12 +168,11 @@ function initScatter(input) {
                 var tooltip1x = document.getElementById("tooltip1x")
                 var tooltip1y = document.getElementById("tooltip1y")
 
-                
                 tooltip1x.style.left = eval(d3.event.clientX+25)+"px"
-                tooltip1x.style.top = eval((d3.event.clientY-50)+(d3.event.clientY/2))+"px"
+                tooltip1x.style.top = Math.min(eval((d3.event.clientY-50)+(d3.event.clientY/2)),  height * .65) + window.scrollY +"px"
 
-                tooltip1y.style.left = eval((d3.event.clientX+100)-(d3.event.clientX/2))+"px"
-                tooltip1y.style.top = eval(d3.event.clientY-50)+"px"
+                tooltip1y.style.left = eval((d3.event.clientX+250)-(d3.event.clientX/2))+"px"
+                tooltip1y.style.top = eval(d3.event.clientY-50)+window.scrollY+"px"
 
                 tooltip1x.hidden = false
                 tooltip1x.style.opacity = 1;
@@ -181,7 +193,7 @@ function initScatter(input) {
                 tooltipPop.innerHTML = d.population
             })                  
             .on("mouseout", function(d) {
-                d3.select(this).style("fill", "gray");
+                d3.select(this).style("fill", scaleColor(d.co2));
                 d3.select(this).style("stroke-width", "1")
                 d3.select(this).style("r", function(d) {return scaleRad(d.population)})
                 
@@ -206,9 +218,20 @@ function initScatter(input) {
                 
                 var tooltip1x = document.getElementById("tooltip1x")
                 var tooltip1y = document.getElementById("tooltip1y")
-
+                var tooltip = document.getElementById("tooltip1");
+                
                 tooltip1x.hidden = true
                 tooltip1y.hidden = true
+                
+                tooltip.style.zIndex = -20
+                tooltip1x.style.zIndex = -20
+                tooltip1y.style.zIndex = -20
+
+                tooltip1x.style.left = 0+"px"
+                tooltip1x.style.top = 0+"px"
+
+                tooltip1y.style.left = 0+"px"
+                tooltip1y.style.top = 0+"px"
 
                 d3.selectAll(".test1")
                     .remove()
@@ -244,17 +267,14 @@ function initScatter(input) {
             })
             .on("mousemove", function(d,i) {
                 var tooltip = document.getElementById("tooltip1");
-                tooltip.style.left = eval(d3.event.clientX-200)+"px"
-                tooltip.style.top = eval(d3.event.clientY-250)+"px"
-
                 var tooltip1x = document.getElementById("tooltip1x")
                 var tooltip1y = document.getElementById("tooltip1y")
 
                 tooltip1x.style.left = eval(d3.event.clientX+25)+"px"
-                tooltip1x.style.top = eval((d3.event.clientY-50)+(d3.event.clientY/2))+"px"
+                tooltip1x.style.top = Math.min(eval((d3.event.clientY-50)+(d3.event.clientY/2)),  height * .65) + window.scrollY +"px"
 
-                tooltip1y.style.left = eval((d3.event.clientX+100)-(d3.event.clientX/2))+"px"
-                tooltip1y.style.top = eval(d3.event.clientY-50)+"px"
+                tooltip1y.style.left = eval((d3.event.clientX+250)-(d3.event.clientX/2))+"px"
+                tooltip1y.style.top = eval(d3.event.clientY-50)+window.scrollY+"px"
             });
 }
 
@@ -290,8 +310,8 @@ function initLine(input) {
 
     let height = screen.height
     let width = screen.width
-    var scaleX = d3.scaleLinear().domain([1980,2021]).range([25,width * .6])
-    var scaleY = d3.scaleLinear().domain([Math.min.apply(null, minArray.filter(Boolean)),Math.max(Oilmax, Cementmax, Coalmax, Consumptionmax, Flaringmax, Gasmax, Trademax)]).range([height * .65,50])
+    var scaleX = d3.scaleLinear().domain([1980,2021]).range([50,width * .6])
+    var scaleY = d3.scaleLinear().domain([Math.min.apply(null, minArray.filter(Boolean)),Math.max(Oilmax, Cementmax, Coalmax, Consumptionmax, Flaringmax, Gasmax, Trademax)]).range([height * .4,0])
     var totalMin = Math.min.apply(null, minArray.filter(Boolean))
     var marginx = 50
     var marginy = 50
@@ -304,7 +324,7 @@ function initLine(input) {
     var filteredLine = filteredByCountry.filter(function(d) {
         return d.year >= startYear && d.year <= endYear;
     })
-
+    
     if (Oilmax != 0) {
         //Add Oil Line
         var oilLine = d3.line()
@@ -312,13 +332,28 @@ function initLine(input) {
             .y(d => scaleY(d.oil_co2));
         d3.select("#scene2svg")
             .append("g")
-            .attr("transform","translate("+marginx+","+marginy+")")
+            .attr("transform","translate("+marginx+","+eval(marginy)+")")
             .append("path")
             .data([filteredLine])
             .attr("d", oilLine) 
             .attr("fill", "none")
             .attr("stroke-width", "5")
             .attr("stroke", oilColor);
+        d3.select('#scene2svg')
+            .append('g')
+            .attr("transform","translate("+eval((marginy*2)-5)+","+eval(marginy)+")")
+            .call(d3
+                .axisLeft()
+                .scale(scaleY)
+                .ticks(5))
+        d3.select('#scene2svg')
+            .append('g')
+            .attr("transform","translate("+marginx+","+eval((height*.4+marginy+5))+")")
+            .call(d3
+                .axisBottom()
+                .scale(scaleX)
+                .ticks(5)     
+                .tickFormat((d, i) => ["1980", "1990", "2000", "2010", "2020"][i]))
         //Add Oil dots
         d3.select('#scene2svg')
             .append("g")
@@ -340,7 +375,7 @@ function initLine(input) {
                             .attr("transform","translate("+marginx+","+marginy+")")
                         .append("line")        
                             .style("stroke", oilColor)
-                            .attr("x1", scaleX(Oilmin))    
+                            .attr("x1", marginx-5)    
                             .attr("y1", scaleY(d.oil_co2))     
                             .attr("x2", scaleX(d.year)-5)     
                             .attr("y2", scaleY(d.oil_co2))
@@ -354,15 +389,16 @@ function initLine(input) {
                             .attr("x1", scaleX(d.year))    
                             .attr("y1", scaleY(d.oil_co2)+5)     
                             .attr("x2", scaleX(d.year))     
-                            .attr("y2", scaleY(totalMin),15)
+                            .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
-
+                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("stroke-width", "2")
+                        d3.select(this).style("r", 6)
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = eval((d3.event.clientY+250)-(d3.event.clientY/2))+"px"
-
+                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
                         tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
@@ -384,6 +420,9 @@ function initLine(input) {
                 })                  
                 .on("mouseout", function(d) {
                     d3.select(this).style("fill", oilColor);
+                    d3.select(this).style("fill", oilColor);
+                    d3.select(this).style("stroke-width", "1")
+                    d3.select(this).style("r", 5)
                     
                     d3.selectAll(".test2")
                         .remove()
@@ -456,7 +495,7 @@ function initLine(input) {
                             .attr("transform","translate("+marginx+","+marginy+")")
                         .append("line")        
                             .style("stroke", cementColor)
-                            .attr("x1", scaleX(Oilmin))    
+                            .attr("x1", marginx-5)    
                             .attr("y1", scaleY(d.cement_co2))     
                             .attr("x2", scaleX(d.year)-5)     
                             .attr("y2", scaleY(d.cement_co2))
@@ -470,15 +509,17 @@ function initLine(input) {
                             .attr("x1", scaleX(d.year))    
                             .attr("y1", scaleY(d.cement_co2)+5)     
                             .attr("x2", scaleX(d.year))     
-                            .attr("y2", scaleY(totalMin),15)
+                            .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
-
+                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("stroke-width", "2")
+                        d3.select(this).style("r", 6)
+                       
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = eval((d3.event.clientY+250)-(d3.event.clientY/2))+"px"
-
+                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
                         tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
@@ -500,8 +541,13 @@ function initLine(input) {
                 })                  
                 .on("mouseout", function(d) {
                     d3.select(this).style("fill", cementColor);
-                        d3.selectAll(".test2")
+                    d3.select(this).style("fill", cementColor);
+                    d3.select(this).style("stroke-width", "1")
+                    d3.select(this).style("r", 5)
+                    
+                    d3.selectAll(".test2")
                         .remove()
+                        
                     var tooltipoil = document.getElementById("tooltipoil");
                     var tooltipcement = document.getElementById("tooltipcement");
                     var tooltipcoal = document.getElementById("tooltipcoal");
@@ -570,7 +616,7 @@ function initLine(input) {
                             .attr("transform","translate("+marginx+","+marginy+")")
                         .append("line")        
                             .style("stroke", coalColor)
-                            .attr("x1", scaleX(Coalmin))    
+                            .attr("x1", marginx-5)    
                             .attr("y1", scaleY(d.coal_co2))     
                             .attr("x2", scaleX(d.year)-5)     
                             .attr("y2", scaleY(d.coal_co2))
@@ -584,16 +630,19 @@ function initLine(input) {
                             .attr("x1", scaleX(d.year))    
                             .attr("y1", scaleY(d.coal_co2)+5)     
                             .attr("x2", scaleX(d.year))     
-                            .attr("y2", scaleY(totalMin),15)
+                            .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
-
+                        
+                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("stroke-width", "2")
+                        d3.select(this).style("r", 6)
+                        
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = eval((d3.event.clientY+250)-(d3.event.clientY/2))+"px"
-    
+                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
                         tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+"px"
-    
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
@@ -614,6 +663,10 @@ function initLine(input) {
                 })                  
                 .on("mouseout", function(d) {
                     d3.select(this).style("fill", coalColor);
+                    d3.select(this).style("fill", coalColor);
+                    d3.select(this).style("stroke-width", "1")
+                    d3.select(this).style("r", 5)
+                    
                     d3.selectAll(".test2")
                         .remove()
                         
@@ -685,7 +738,7 @@ function initLine(input) {
                             .attr("transform","translate("+marginx+","+marginy+")")
                         .append("line")        
                             .style("stroke", consumptionColor)
-                            .attr("x1", scaleX(Consumptionmin))    
+                            .attr("x1", marginx-5)    
                             .attr("y1", scaleY(d.consumption_co2))     
                             .attr("x2", scaleX(d.year)-5)     
                             .attr("y2", scaleY(d.consumption_co2))
@@ -699,16 +752,19 @@ function initLine(input) {
                             .attr("x1", scaleX(d.year))    
                             .attr("y1", scaleY(d.consumption_co2)+5)     
                             .attr("x2", scaleX(d.year))     
-                            .attr("y2", scaleY(totalMin),15)
+                            .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
 
+                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("stroke-width", "2")
+                        d3.select(this).style("r", 6)
+
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = eval((d3.event.clientY+250)-(d3.event.clientY/2))+"px"
-    
+                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
                         tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+"px"
-    
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
@@ -729,6 +785,10 @@ function initLine(input) {
                 })                  
                 .on("mouseout", function(d) {
                     d3.select(this).style("fill", consumptionColor);
+                    d3.select(this).style("fill", consumptionColor);
+                    d3.select(this).style("stroke-width", "1")
+                    d3.select(this).style("r", 5)
+                    
                     d3.selectAll(".test2")
                         .remove()
                         
@@ -800,7 +860,7 @@ function initLine(input) {
                             .attr("transform","translate("+marginx+","+marginy+")")
                         .append("line")        
                             .style("stroke", flaringColor)
-                            .attr("x1", scaleX(Flaringmin))    
+                            .attr("x1", marginx-5)    
                             .attr("y1", scaleY(d.flaring_co2))     
                             .attr("x2", scaleX(d.year)-5)     
                             .attr("y2", scaleY(d.flaring_co2))
@@ -814,16 +874,19 @@ function initLine(input) {
                             .attr("x1", scaleX(d.year))    
                             .attr("y1", scaleY(d.flaring_co2)+5)     
                             .attr("x2", scaleX(d.year))     
-                            .attr("y2", scaleY(totalMin),15)
+                            .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
 
+                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("stroke-width", "2")
+                        d3.select(this).style("r", 6)
+                        
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = eval((d3.event.clientY+250)-(d3.event.clientY/2))+"px"
-    
+                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
                         tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+"px"
-    
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
@@ -844,6 +907,10 @@ function initLine(input) {
                 })                  
                 .on("mouseout", function(d) {
                     d3.select(this).style("fill", flaringColor);
+                    d3.select(this).style("fill", flaringColor);
+                    d3.select(this).style("stroke-width", "1")
+                    d3.select(this).style("r", 5)
+                    
                     d3.selectAll(".test2")
                         .remove()
                         
@@ -915,7 +982,7 @@ function initLine(input) {
                             .attr("transform","translate("+marginx+","+marginy+")")
                         .append("line")        
                             .style("stroke", gasColor)
-                            .attr("x1", scaleX(Gasmin))    
+                            .attr("x1", marginx-5)    
                             .attr("y1", scaleY(d.gas_co2))     
                             .attr("x2", scaleX(d.year)-5)     
                             .attr("y2", scaleY(d.gas_co2))
@@ -929,16 +996,19 @@ function initLine(input) {
                             .attr("x1", scaleX(d.year))    
                             .attr("y1", scaleY(d.gas_co2)+5)     
                             .attr("x2", scaleX(d.year))     
-                            .attr("y2", scaleY(totalMin),15)
+                            .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
 
+                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("stroke-width", "2")
+                        d3.select(this).style("r", 6)
+                        
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = eval((d3.event.clientY+250)-(d3.event.clientY/2))+"px"
-    
+                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
                         tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+"px"
-    
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
@@ -959,6 +1029,10 @@ function initLine(input) {
                 })                  
                 .on("mouseout", function(d) {
                     d3.select(this).style("fill", gasColor);
+                    d3.select(this).style("fill", gasColor);
+                    d3.select(this).style("stroke-width", "1")
+                    d3.select(this).style("r", 5)
+                    
                     d3.selectAll(".test2")
                         .remove()
                         
@@ -1030,7 +1104,7 @@ function initLine(input) {
                             .attr("transform","translate("+marginx+","+marginy+")")
                         .append("line")        
                             .style("stroke", tradeColor)
-                            .attr("x1", scaleX(Trademin))    
+                            .attr("x1", marginx-5)    
                             .attr("y1", scaleY(d.trade_co2))     
                             .attr("x2", scaleX(d.year)-5)     
                             .attr("y2", scaleY(d.trade_co2))
@@ -1044,16 +1118,19 @@ function initLine(input) {
                             .attr("x1", scaleX(d.year))    
                             .attr("y1", scaleY(d.trade_co2)+5)     
                             .attr("x2", scaleX(d.year))     
-                            .attr("y2", scaleY(d.trade_co2),15)
+                            .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
 
+                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("stroke-width", "2")
+                        d3.select(this).style("r", 6)
+                        
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = eval((d3.event.clientY+250)-(d3.event.clientY/2))+"px"
-    
+                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
                         tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+"px"
-    
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
@@ -1074,6 +1151,10 @@ function initLine(input) {
                 })                  
                 .on("mouseout", function(d) {
                     d3.select(this).style("fill", tradeColor);
+                    d3.select(this).style("fill", tradeColor);
+                    d3.select(this).style("stroke-width", "1")
+                    d3.select(this).style("r", 5)
+                    
                     d3.selectAll(".test2")
                         .remove()
                         
@@ -1123,24 +1204,30 @@ function initBar(input) {
     var filteredData = input.filter(d => d.country == selectedCountry && d.year == currYear)[0]
 
     let values = [filteredData.oil_co2, filteredData.cement_co2, filteredData.coal_co2, filteredData.consumption_co2, filteredData.flaring_co2, filteredData.gas_co2, filteredData.trade_co2];
-    /*
-    values.forEach(function(d) {
-        d = +d;
-        d = +d;
-        d = +d;
-        d = +d;
-        d = +d;
-        d = +d;
-        d = +d;
-    });
-*/
+
     var scaleX = d3.scaleBand().domain([0,1,2,3,4,5,6]).range([0,canvasWidth - 175])
     var scaleY = d3.scaleLinear().domain([Math.min(filteredData.oil_co2, filteredData.cement_co2, filteredData.coal_co2, filteredData.consumption_co2, filteredData.flaring_co2, filteredData.gas_co2, filteredData.trade_co2) - 1,Math.max(filteredData.oil_co2, filteredData.cement_co2, filteredData.coal_co2, filteredData.consumption_co2, filteredData.flaring_co2, filteredData.gas_co2, filteredData.trade_co2)]).range([0,canvasHeight])
+    var scaleYAxis = d3.scaleLinear().domain([Math.min(filteredData.oil_co2, filteredData.cement_co2, filteredData.coal_co2, filteredData.consumption_co2, filteredData.flaring_co2, filteredData.gas_co2, filteredData.trade_co2) - 1,Math.max(filteredData.oil_co2, filteredData.cement_co2, filteredData.coal_co2, filteredData.consumption_co2, filteredData.flaring_co2, filteredData.gas_co2, filteredData.trade_co2)]).range([canvasHeight,0])
 
     d3.select('#scene3svg')
         .selectAll("g")
         .remove()
 
+    d3.select('#scene3svg')
+    .append('g')
+    .attr("transform","translate("+marginy+","+eval(marginy)+")")
+    .call(d3
+        .axisLeft()
+        .scale(scaleYAxis)
+        .ticks(5))
+    d3.select('#scene3svg')
+        .append('g')
+        .attr("transform","translate("+eval(marginx)+","+eval((height*.45+marginy*2))+")")
+        .call(d3
+            .axisBottom()
+            .scale(scaleX)
+            .ticks(7)     
+            .tickFormat((d, i) => ["Oil Co2", "Cement Co2", "Coal Co2", "Consumption Co2", "Flaring Co2", "Gas Co2", "Trade Co2"][i]))
     d3.select("#scene3svg")
         .append("g")
         .attr("transform", "translate("+marginx+","+marginy+")")
@@ -1148,7 +1235,7 @@ function initBar(input) {
         .data(values)
         .enter()
         .append("rect")
-            .attr("x",  function(d, i) { return (scaleX.bandwidth() * i) + 25;})
+            .attr("x",  function(d, i) { return (scaleX.bandwidth() * i +15);})
             .attr("y", function(d) { return canvasHeight - scaleY(d); } )
             .attr("width", scaleX.bandwidth() - 25)
             .attr("height", function(d) {return scaleY(d);})
@@ -1166,7 +1253,7 @@ function initBar(input) {
                 tooltip.style.opacity = 1;
                 tooltip.style.position = "absolute"
                 tooltip.style.left = eval(d3.event.clientX+10)+"px"
-                tooltip.style.top = eval(d3.event.clientY+10)+"px"
+                tooltip.style.top = eval(d3.event.clientY+10)-(window.scrollY-(height*.35)) +"px"
                 tooltip.style.zIndex = 1
                 tooltip.style.backgroundColor = "whitesmoke"
                 tooltip.style.borderColor = "black"
@@ -1183,24 +1270,12 @@ function initBar(input) {
             .on("mousemove", function(d,i) {
                 var tooltip = document.getElementById("tooltip3");
                 tooltip.style.left = eval(d3.event.clientX+10)+"px"
-                tooltip.style.top = eval(d3.event.clientY+10)+"px"
+                //tooltip.style.top = Math.min(eval(d3.event.clientY+10)-(window.scrollY+(height*.45)), (height*.45))+"px"
+                console.log(eval(d3.event.clientY+10))                
+                console.log(eval(d3.event.clientY+10)-(window.scrollY-(height*1.2)))                
+                //tooltip.style.top = eval(d3.event.clientY+10)-(window.scrollY-(height*.35))+"px"
+                tooltip.style.top = eval(d3.event.clientY+10)+(window.scrollY-(height*1.65)) +"px"
             });
-
-    /*
-    import { scaleBand } from "d3-scale";
-import { axisBottom } from "d3-axis";
-
-xLabels = [{id: 0001, label: somelabel}, ...]
-
-const xScale = scaleBand()
-  .domain(xLabels.map((d) => d.id))
-  .rangeRound([0, 500])
-  .paddingInner(0.1);
-
-const xAxis = axisBottom(xScale)
-  .tickFormat(
-    (d) => xLabels.find((l) => l.id === d).label
-  )*/
 }
 function initCountryDropdown(input) {
     d3.select('#scene3')
@@ -1287,7 +1362,7 @@ function loadScene2() {
 
     scene2.hidden = false;
     scene2SVG.setAttribute("display", "block");
-    scene2.scrollIntoView()
+    scene2SVG.scrollIntoView() + 200
 
     outputStart.innerHTML = sliderStart.value;
     outputEnd.innerHTML = sliderEnd.value;
@@ -1483,7 +1558,11 @@ function filterData(dataIn) {
         d.country != "Tunisia" && 
         d.country != "Nauru" && 
         d.country != "Dominica" && 
-        d.country != "Lesotho")
+        d.country != "Chad" &&
+        d.country != "Lesotho" &&
+        d.country != "Fiji" &&
+        d.country != "Eswatini" && 
+        d.country != "Bahamas")
     return countryFilter
 }
    
