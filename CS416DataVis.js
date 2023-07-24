@@ -312,7 +312,6 @@ function initLine(input) {
     let width = screen.width
     var scaleX = d3.scaleLinear().domain([1980,2021]).range([50,width * .6])
     var scaleY = d3.scaleLinear().domain([Math.min.apply(null, minArray.filter(Boolean)),Math.max(Oilmax, Cementmax, Coalmax, Consumptionmax, Flaringmax, Gasmax, Trademax)]).range([height * .4,0])
-    var totalMin = Math.min.apply(null, minArray.filter(Boolean))
     var marginx = 50
     var marginy = 50
 
