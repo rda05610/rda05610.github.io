@@ -414,7 +414,9 @@ function initLine(input) {
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
                         var tooltipYear2 = document.getElementById("tooltipYear2")
+                        var tooltipLabel2 = document.getElementById("tooltipLabel2")
 
+                        tooltipLabel2.innerHTML = "Oil Co2: "
                         tooltipCo22.innerHTML = d.oil_co2
                         tooltipYear2.innerHTML = d.year
                 })                  
@@ -535,8 +537,10 @@ function initLine(input) {
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
                         var tooltipYear2 = document.getElementById("tooltipYear2")
+                        var tooltipLabel2 = document.getElementById("tooltipLabel2")
 
-                        tooltipCo22.innerHTML = d.oil_co2
+                        tooltipLabel2.innerHTML = "Cement Co2: "
+                        tooltipCo22.innerHTML = d.cement_co2
                         tooltipYear2.innerHTML = d.year
                 })                  
                 .on("mouseout", function(d) {
@@ -657,7 +661,9 @@ function initLine(input) {
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
                         var tooltipYear2 = document.getElementById("tooltipYear2")
+                        var tooltipLabel2 = document.getElementById("tooltipLabel2")
 
+                        tooltipLabel2.innerHTML = "Coal Co2: "
                         tooltipCo22.innerHTML = d.coal_co2
                         tooltipYear2.innerHTML = d.year
                 })                  
@@ -779,7 +785,9 @@ function initLine(input) {
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
                         var tooltipYear2 = document.getElementById("tooltipYear2")
+                        var tooltipLabel2 = document.getElementById("tooltipLabel2")
 
+                        tooltipLabel2.innerHTML = "Consumption Co2: "
                         tooltipCo22.innerHTML = d.consumption_co2
                         tooltipYear2.innerHTML = d.year
                 })                  
@@ -901,7 +909,9 @@ function initLine(input) {
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
                         var tooltipYear2 = document.getElementById("tooltipYear2")
+                        var tooltipLabel2 = document.getElementById("tooltipLabel2")
 
+                        tooltipLabel2.innerHTML = "Flaring Co2: "
                         tooltipCo22.innerHTML = d.flaring_co2
                         tooltipYear2.innerHTML = d.year
                 })                  
@@ -1023,7 +1033,9 @@ function initLine(input) {
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
                         var tooltipYear2 = document.getElementById("tooltipYear2")
+                        var tooltipLabel2 = document.getElementById("tooltipLabel2")
 
+                        tooltipLabel2.innerHTML = "Gas Co2: "
                         tooltipCo22.innerHTML = d.gas_co2
                         tooltipYear2.innerHTML = d.year
                 })                  
@@ -1145,7 +1157,9 @@ function initLine(input) {
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
                         var tooltipYear2 = document.getElementById("tooltipYear2")
+                        var tooltipLabel2 = document.getElementById("tooltipLabel2")
 
+                        tooltipLabel2.innerHTML = "Trade Co2: "
                         tooltipCo22.innerHTML = d.trade_co2
                         tooltipYear2.innerHTML = d.year
                 })                  
