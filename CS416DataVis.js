@@ -287,6 +287,9 @@ function initScatter(input) {
                     countryOutput2.innerHTML = d.country;
                     outputCountry3.innerHTML = d.country;  
                     
+                    initBar(input);
+                    loadScene3();
+
                     initLine(input);
                     loadScene2();
             })
@@ -1319,7 +1322,7 @@ function initBar(input) {
                 console.log(eval(d3.event.clientY+10))                
                 console.log(eval(d3.event.clientY+10)-(window.scrollY-(height*1.2)))                
                 //tooltip.style.top = eval(d3.event.clientY+10)-(window.scrollY-(height*.35))+"px"
-                tooltip.style.top = eval(d3.event.clientY+10)+(window.scrollY-(height*1.60)) +"px"
+                tooltip.style.top = eval(d3.event.clientY+10)+(window.scrollY-(height*1.70)) +"px"
             });
 }
 function initCountryDropdown(input) {
