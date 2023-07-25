@@ -1272,7 +1272,7 @@ function initBar(input) {
         .ticks(5))
     d3.select('#scene3svg')
         .append('g')
-        .attr("transform","translate("+eval(marginx)+","+eval((height*.45+marginy*2+10))+")")
+        .attr("transform","translate("+eval(marginx)+","+eval((height*.45+marginy*2 - 5))+")")
         .call(d3
             .axisBottom()
             .scale(scaleX)
@@ -1289,8 +1289,8 @@ function initBar(input) {
             .attr("y", function(d) { return canvasHeight - scaleY(d); } )
             .attr("width", scaleX.bandwidth() - 25)
             .attr("height", function(d) {return scaleY(d);})
-            .attr("stroke", "black")
-            .attr("stroke-width", "1")
+            //.attr("stroke", "black")
+            //.attr("stroke-width", "1")
             .attr("name", function(d,i) {
                 return nameCode[i];
             })
@@ -1298,33 +1298,40 @@ function initBar(input) {
                 return colorCode[i];
             })
             .on("mouseover", function(d, i) {
+                d3.select("#scene3svg")
+                .append("g")
+                    .attr("transform","translate("+marginx+","+marginy+")")
+                .append("line")        
+                    .style("stroke", colorCode[i])
+                    .attr("x1", 0)    
+                    .attr("y1", canvasHeight - scaleY(d))     
+                    .attr("x2", (scaleX.bandwidth() * i +15) +(scaleX.bandwidth() - 25))     
+                    .attr("y2", canvasHeight - scaleY(d))
+                    .attr("class", "test3")
+                    .attr("stroke-width", "3")
+
                 var tooltip = document.getElementById("tooltip3");
-                
+
                 tooltip.style.opacity = 1;
                 tooltip.style.position = "absolute"
-                tooltip.style.left = eval(d3.event.clientX+10)+"px"
-                tooltip.style.top = eval(d3.event.clientY+10)-(window.scrollY-(height*.35)) +"px"
+                
+                tooltip.style.left = eval((width * .35) + (scaleX.bandwidth() - 25)* i) +"px"
+                tooltip.style.top = eval((height * .65) -scaleY(d) - 50)+"px"
+                
                 tooltip.style.zIndex = 1
                 tooltip.style.backgroundColor = "whitesmoke"
                 tooltip.style.borderColor = "black"
                 tooltip.style.border = "1px";
                 tooltip.style.borderStyle = "solid"
                 tooltip.style.padding = "5px"
-                tooltip.innerHTML = nameCode[i]+ " is: "+d;
+                tooltip.innerHTML = nameCode[i]+ ": "+d;
             })
             .on("mouseout", function(d, i) {
                 var tooltip = document.getElementById("tooltip3");
                 tooltip.style.opacity = 0;
                 tooltip.innerHTML = "";
-            })
-            .on("mousemove", function(d,i) {
-                var tooltip = document.getElementById("tooltip3");
-                tooltip.style.left = eval(d3.event.clientX+10)+"px"
-                //tooltip.style.top = Math.min(eval(d3.event.clientY+10)-(window.scrollY+(height*.45)), (height*.45))+"px"
-                console.log(eval(d3.event.clientY+10))                
-                console.log(eval(d3.event.clientY+10)-(window.scrollY-(height*1.2)))                
-                //tooltip.style.top = eval(d3.event.clientY+10)-(window.scrollY-(height*.35))+"px"
-                tooltip.style.top = eval(d3.event.clientY+10)+(window.scrollY-(height*1.70)) +"px"
+                d3.selectAll(".test3")
+                    .remove()
             });
 }
 function initCountryDropdown(input) {
