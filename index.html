@@ -72,7 +72,6 @@
         <!-- Scene 2 -->
         <div id="scene2" style="width: 100%; top: 100%; position: absolute;">
             <h1 style="margin-left: 5%;"> How <span id="countryTitle2"></span> Co2 Emissions Have Changed Year Over year</h1>
-            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 3%;">About</h2>
             <div id="tooltip2" style="z-index: -1;" hidden>
                 <strong><p id="tooltipcountry" style="margin-left: 30%"></p></strong>
                 <p><strong><span>Oil Co2: </span></strong><span id="tooltipoil2"></span></p>
@@ -89,22 +88,69 @@
             <div id=tooltip2y hidden>
                 <p><strong><span id="tooltipLabel2"></span></strong><span id="tooltipCo22"></span></p>
             </div>
-            <div id="scene2AboutContainer" style="border: 5px; border-style: inset; margin-left: 5%; width: 20%; background: whitesmoke; padding: 2%;">
-                <p> Country: <span id="CountryOutput2"></span></p>
-                <p> Year Range: <span id="start"></span> <span>-</span> <span id="end"></span></p>
-            </div>
-            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 3%;">Filters</h2>
-            <div class="slidecontainer" style="border: 5px; border-style: inset; margin-left: 5%; width: 20%; background: whitesmoke; padding: 2%; padding-bottom: 3%;">
-                <div>
-                    <label style="margin-top: 1%; margin-bottom: 1%">Start Year</label><input type="range" min=1980 max=2021 value=1979 class="slider" id="StartDateRange" style="margin: 1%; float:right">
+
+            <div style="float:left;  margin-left: 5%; width:35%">
+                <div style="float:left; width: 40%;">
+                    <h2 style="padding-bottom: 0px; margin-bottom: 3%;">About</h2>
+                    <div id="scene2AboutContainer" style="width:100%;border: 5px; border-style: inset; background: whitesmoke; padding: 2%;">
+                        <p> Country: <span id="CountryOutput2"></span></p>
+                        <p> Year Range: <span id="start"></span> <span>-</span> <span id="end"></span></p>
+                    </div>
                 </div>
                 <div>
-                    <label style="float:left; margin-top: 1%; margin-bottom: 1%">End Year</label><input type="range" min=1980 max=2021 value=2000 class="slider" id="EndDateRange" style="margin: 1%; float:right">
+                    <h2 style="margin-left:45%; padding-bottom: 0px; margin-bottom: 1%;">Key</h2>
+                    <div id="scene2KeyContainer" style="margin-right:2%; float:right; border: 5px; border-style: inset; width: 50%; height: 45%; background-color: whitesmoke;">
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label>Oil Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: cornflowerblue;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Cement Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: darkkhaki;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Coal Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: yellow;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Consumption Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: mediumseagreen;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Flaring Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: orange;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Gas Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: mediumpurple;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Trade Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: tomato;"></div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div style="float:left; width: 45%;">
+                    <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 3%;">Filters</h2>
+                    <div class="slidecontainer" style="border: 5px; border-style: inset; background: whitesmoke; padding: 7%; padding-bottom: 15%;">
+                        <div>
+                            <label style="margin-top: 1%; margin-bottom: 1%;">Start</label><input type="range" min=1980 max=2021 value=1979 class="slider" id="StartDateRange" style="margin: 1%; float:right; width:65%">
+                        </div>
+                        <div>
+                            <label style="float:left; margin-top: 1%; margin-bottom: 1%">End</label><input type="range" min=1980 max=2021 value=2000 class="slider" id="EndDateRange" style="margin: 1%; float:right; width:65%">
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+          
+
+           
+           
         </div>
 
-        <svg id="scene2svg" width="65%" height="75%" style="float:right; top: 105%; position: absolute; left: 35%;">
+        <svg id="scene2svg" width="65%" height="75%" style="float:right; top: 125%; position: absolute; left: 35%;">
         </svg>
 
 

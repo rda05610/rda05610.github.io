@@ -1,5 +1,5 @@
 let globalData;
-let colorCode = ["cornflowerblue", "gray", "yellow", "mediumseagreen", "orange", "mediumpurple", "lightgray"]
+let colorCode = ["cornflowerblue", "darkkhaki", "yellow", "mediumseagreen", "orange", "mediumpurple", "tomato"]
 let oilColor = colorCode[0];
 let cementColor = colorCode[1];
 let coalColor = colorCode[2];
@@ -51,14 +51,33 @@ function initScatter(input) {
     let width = screen.width
     var marginx = 50
     var marginy = 50
-                                             //982372480
-    var scaleX = d3.scaleLog().domain([10000,1000000000]).range([50,width * .55])
-    var scaleY = d3.scaleLog().domain([0.025,5000]).range([height * .4,15])
-    var scaleRad =  d3.scaleLog().domain([21,750000000]).range([2,10])
-    var scaleColor = d3.scaleLinear().domain([0.025,400]).range(["cornflowerblue", "red"])
+        
+    input.forEach(function(d) {
+        d.population = +d.population;
+        d.co2 = +d.co2;
+    });
+
+    var filteredByYear = input.filter(function(d) {return d.year == currYear})
+
+    var popmax = d3.max(filteredByYear, function(d) { return d.population; });
+    var co2max = d3.max(filteredByYear, function(d) { return d.co2; });
+
+    
+    var popmin = d3.min(filteredByYear, function(d) { return d.population; });
+    var co2min = d3.min(filteredByYear, function(d) { return d.co2; });
+
+    console.log(popmax)
+    console.log(popmin)
+
+    //982372480
+    var scaleX = d3.scaleLog().domain([popmin,popmax]).range([50,width * .55])
+    var scaleY = d3.scaleLog().domain([co2min,co2max]).range([height * .4,15])
+    var scaleRad =  d3.scaleLog().domain([21,popmax/2]).range([2,10])
+    var scaleColor = d3.scaleLinear().domain([co2min,co2max/4]).range(["cornflowerblue", "red"])
 
     console.log(eval((height * .45)+50))
     console.log(eval((height * .45)))
+    
     d3.select('#scene1svg')
         .selectAll("g")
         .remove();
@@ -68,16 +87,21 @@ function initScatter(input) {
         .call(d3
             .axisLeft()
             .scale(scaleY)
-            .ticks(5)
-            .tickFormat((d, i) => [.1, 1, 10, 100, 1000, 10000][i]))
+            .ticks(4)
+            .tickFormat(function(d,i) {
+                return new Number(d);
+            }))
+            //.tickFormat((d, i) => [.1, 1, 10, 100, 1000, 10000][i]))
     d3.select('#scene1svg')
         .append('g')
         .attr("transform","translate("+marginx+","+eval((height*.4)+marginy+5)+")")
         .call(d3
             .axisBottom()
             .scale(scaleX)
-            .ticks(5)
-            .tickFormat((d, i) => [10000, 100000, 1000000, 10000000, 100000000,1000000000][i]))
+            .ticks(4)
+            .tickFormat(function(d,i) {
+                return new Number(d);
+            }))
     d3.select('#scene1svg')
         .append("g")
         .attr("transform","translate("+marginx+","+marginy+")")
@@ -114,9 +138,10 @@ function initScatter(input) {
                         .attr("x2", scaleX(d.population))     
                         .attr("y2", height * .4+5)
                         .attr("class", "test1")
+                       
                 d3.select(this).style("fill", "lightgray")
                 d3.select(this).style("stroke-width", "2")
-                d3.select(this).style("r", function(d) {return scaleRad(d.population) + 5})
+                d3.select(this).style("r", function(d) {return scaleRad(d.population) + 1})
                 var tooltip = document.getElementById("tooltip1");
                 
                 tooltip.style.opacity = 1;
@@ -368,7 +393,7 @@ function initLine(input) {
                 .attr("stroke-width", "1")
                 .attr("fill", oilColor)
                 .on("mouseover",function(d) {
-                    d3.select(this).style("fill", "red")
+                    d3.select(this).style("fill", "lightgray")
                     d3.select("#scene2svg")
                         .append("g")
                             .attr("transform","translate("+marginx+","+marginy+")")
@@ -391,12 +416,13 @@ function initLine(input) {
                             .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
-                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("fill", "lightgray")
                         d3.select(this).style("stroke-width", "2")
                         d3.select(this).style("r", 6)
+                        
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
-                        tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
+                        tooltip2x.style.top = eval((height * .6+55) - (((height * .4 + 5) - scaleY(d.oil_co2)+5)/2))+"px"
+                        tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
                         tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
@@ -408,7 +434,7 @@ function initLine(input) {
                         tooltip2y.hidden = false
                         tooltip2y.style.opacity = 1;
                         tooltip2y.style.position = "absolute"
-                        tooltip2y.style.zIndex = 1
+                        tooltip2y.style.zIndex = -1
                         tooltip2y.style.flexWrap = true;
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
@@ -449,6 +475,12 @@ function initLine(input) {
     
                     tooltip1x.hidden = true
                     tooltip1y.hidden = true
+
+                    tooltip1x.style.zIndex = -1
+                    tooltip1y.style.zIndex = -1
+                    var tooltipLabel2 = document.getElementById("tooltipLabel2")
+
+                    tooltipLabel2.zIndex = -1
                 })
                 .on("click", function(d) {
                     currYear = d.year;
@@ -490,7 +522,7 @@ function initLine(input) {
                 .attr("stroke-width", "1")
                 .attr("fill", cementColor)
                 .on("mouseover",function(d) {
-                    d3.select(this).style("fill", "red")
+                    d3.select(this).style("fill", "lightgray")
                     d3.select("#scene2svg")
                         .append("g")
                             .attr("transform","translate("+marginx+","+marginy+")")
@@ -513,25 +545,25 @@ function initLine(input) {
                             .attr("y2", height * .4 + 5)
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
-                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("fill", "lightgray")
                         d3.select(this).style("stroke-width", "2")
                         d3.select(this).style("r", 6)
                        
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
-                        tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
+                        tooltip2x.style.top = eval((height * .6+55) - (((height * .4 + 5) - scaleY(d.cement_co2)+5)/2))+"px"
+                        tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
                         tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
-                        tooltip2x.style.zIndex = 1
+                        tooltip2x.style.zIndex = -1
                         tooltip2x.style.flexWrap = true;
 
                         tooltip2y.hidden = false
                         tooltip2y.style.opacity = 1;
                         tooltip2y.style.position = "absolute"
-                        tooltip2y.style.zIndex = 1
+                        tooltip2y.style.zIndex = -1
                         tooltip2y.style.flexWrap = true;
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
@@ -613,7 +645,7 @@ function initLine(input) {
                 .attr("stroke-width", "1")
                 .attr("fill", coalColor)
                 .on("mouseover",function(d) {
-                    d3.select(this).style("fill", "red")
+                    d3.select(this).style("fill", "lightgray")
                     d3.select("#scene2svg")
                         .append("g")
                             .attr("transform","translate("+marginx+","+marginy+")")
@@ -637,25 +669,25 @@ function initLine(input) {
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
                         
-                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("fill", "lightgray")
                         d3.select(this).style("stroke-width", "2")
                         d3.select(this).style("r", 6)
                         
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
-                        tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
+                        tooltip2x.style.top = eval((height * .6+55) - (((height * .4 + 5) - scaleY(d.coal_co2)+5)/2))+"px"
+                        tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
                         tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
-                        tooltip2x.style.zIndex = 1
+                        tooltip2x.style.zIndex = -1
                         tooltip2x.style.flexWrap = true;
 
                         tooltip2y.hidden = false
                         tooltip2y.style.opacity = 1;
                         tooltip2y.style.position = "absolute"
-                        tooltip2y.style.zIndex = 1
+                        tooltip2y.style.zIndex = -1
                         tooltip2y.style.flexWrap = true;
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
@@ -737,7 +769,7 @@ function initLine(input) {
                 .attr("stroke-width", "1")
                 .attr("fill", consumptionColor)
                 .on("mouseover",function(d) {
-                    d3.select(this).style("fill", "red")
+                    d3.select(this).style("fill", "lightgray")
                     d3.select("#scene2svg")
                         .append("g")
                             .attr("transform","translate("+marginx+","+marginy+")")
@@ -761,25 +793,25 @@ function initLine(input) {
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
 
-                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("fill", "lightgray")
                         d3.select(this).style("stroke-width", "2")
                         d3.select(this).style("r", 6)
 
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
-                        tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
+                        tooltip2x.style.top = eval((height * .6+55) - (((height * .4 + 5) - scaleY(d.consumption_co2)+5)/2))+"px"
+                        tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
                         tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
-                        tooltip2x.style.zIndex = 1
+                        tooltip2x.style.zIndex = -1
                         tooltip2x.style.flexWrap = true;
 
                         tooltip2y.hidden = false
                         tooltip2y.style.opacity = 1;
                         tooltip2y.style.position = "absolute"
-                        tooltip2y.style.zIndex = 1
+                        tooltip2y.style.zIndex = -1
                         tooltip2y.style.flexWrap = true;
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
@@ -861,7 +893,7 @@ function initLine(input) {
                 .attr("stroke-width", "1")
                 .attr("fill", flaringColor)
                 .on("mouseover",function(d) {
-                    d3.select(this).style("fill", "red")
+                    d3.select(this).style("fill", "lightgray")
                     d3.select("#scene2svg")
                         .append("g")
                             .attr("transform","translate("+marginx+","+marginy+")")
@@ -885,25 +917,25 @@ function initLine(input) {
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
 
-                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("fill", "lightgray")
                         d3.select(this).style("stroke-width", "2")
                         d3.select(this).style("r", 6)
                         
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
-                        tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
+                        tooltip2x.style.top = eval((height * .6+55) - (((height * .4 + 5) - scaleY(d.flaring_co2)+5)/2))+"px"
+                        tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
                         tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
-                        tooltip2x.style.zIndex = 1
+                        tooltip2x.style.zIndex = -1
                         tooltip2x.style.flexWrap = true;
 
                         tooltip2y.hidden = false
                         tooltip2y.style.opacity = 1;
                         tooltip2y.style.position = "absolute"
-                        tooltip2y.style.zIndex = 1
+                        tooltip2y.style.zIndex = -1
                         tooltip2y.style.flexWrap = true;
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
@@ -985,7 +1017,7 @@ function initLine(input) {
                 .attr("stroke-width", "1")
                 .attr("fill", gasColor)
                 .on("mouseover",function(d) {
-                    d3.select(this).style("fill", "red")
+                    d3.select(this).style("fill", "lightgray")
                     d3.select("#scene2svg")
                         .append("g")
                             .attr("transform","translate("+marginx+","+marginy+")")
@@ -1009,25 +1041,25 @@ function initLine(input) {
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
 
-                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("fill", "lightgray")
                         d3.select(this).style("stroke-width", "2")
                         d3.select(this).style("r", 6)
                         
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
-                        tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
+                        tooltip2x.style.top = eval((height * .6+55) - (((height * .4 + 5) - scaleY(d.gas_co2)+5)/2))+"px"
+                        tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
                         tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
-                        tooltip2x.style.zIndex = 1
+                        tooltip2x.style.zIndex = -1
                         tooltip2x.style.flexWrap = true;
 
                         tooltip2y.hidden = false
                         tooltip2y.style.opacity = 1;
                         tooltip2y.style.position = "absolute"
-                        tooltip2y.style.zIndex = 1
+                        tooltip2y.style.zIndex = -1
                         tooltip2y.style.flexWrap = true;
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
@@ -1109,7 +1141,7 @@ function initLine(input) {
                 .attr("stroke-width", "1")
                 .attr("fill", tradeColor)
                 .on("mouseover",function(d) {
-                    d3.select(this).style("fill", "red")
+                    d3.select(this).style("fill", "lightgray")
                     d3.select("#scene2svg")
                         .append("g")
                             .attr("transform","translate("+marginx+","+marginy+")")
@@ -1133,25 +1165,25 @@ function initLine(input) {
                             .attr("class", "test2")
                             .attr("stroke-width", "2")
 
-                        d3.select(this).style("fill", "red")
+                        d3.select(this).style("fill", "lightgray")
                         d3.select(this).style("stroke-width", "2")
                         d3.select(this).style("r", 6)
                         
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
-                        tooltip2x.style.top = Math.min(eval((d3.event.clientY+200)-(d3.event.clientY/2))+(window.scrollY-(height * .80)),(height * .55))+"px"
-                        tooltip2y.style.left = eval((d3.event.clientX+150)-(d3.event.clientX/2))+"px"
+                        tooltip2x.style.top = eval((height * .6+55) - (((height * .4 + 5) - scaleY(d.trade_co2)+5)/2))+"px"
+                        tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
                         tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
                         tooltip2x.style.position = "absolute"
-                        tooltip2x.style.zIndex = 1
+                        tooltip2x.style.zIndex = -1
                         tooltip2x.style.flexWrap = true;
 
                         tooltip2y.hidden = false
                         tooltip2y.style.opacity = 1;
                         tooltip2y.style.position = "absolute"
-                        tooltip2y.style.zIndex = 1
+                        tooltip2y.style.zIndex = -1
                         tooltip2y.style.flexWrap = true;
 
                         var tooltipCo22 = document.getElementById("tooltipCo22")
@@ -1375,7 +1407,7 @@ function loadScene2() {
 
     scene2.hidden = false;
     scene2SVG.setAttribute("display", "block");
-    scene2SVG.scrollIntoView() + 200
+    scene2.scrollIntoView() + 200
 
     outputStart.innerHTML = sliderStart.value;
     outputEnd.innerHTML = sliderEnd.value;
