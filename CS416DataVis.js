@@ -1319,7 +1319,7 @@ function initBar(input) {
                 console.log(eval(d3.event.clientY+10))                
                 console.log(eval(d3.event.clientY+10)-(window.scrollY-(height*1.2)))                
                 //tooltip.style.top = eval(d3.event.clientY+10)-(window.scrollY-(height*.35))+"px"
-                tooltip.style.top = eval(d3.event.clientY+10)+(window.scrollY-(height*1.65)) +"px"
+                tooltip.style.top = eval(d3.event.clientY+10)+(window.scrollY-(height*1.60)) +"px"
             });
 }
 function initCountryDropdown(input) {
