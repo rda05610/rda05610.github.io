@@ -21,6 +21,9 @@ let selectedCountry;
 
 //Scene 3 Globals
 //Year
+//Population
+let selectedPopulation;
+
 async function init() {
    
     hideScene1()
@@ -284,6 +287,8 @@ function initScatter(input) {
                     var countryOutput2 = document.getElementById("CountryOutput2")
                     var outputCountry3 = document.getElementById("CountryOutput3")
 
+                    selectedPopulation = d.population
+
                     countryOutput2.innerHTML = d.country;
                     outputCountry3.innerHTML = d.country;  
                     
@@ -292,6 +297,9 @@ function initScatter(input) {
 
                     initLine(input);
                     loadScene2();
+                    var outputPopulation3 = document.getElementById("PopulationOutput3")
+
+                    outputPopulation3.innerHTML = selectedPopulation
             })
             .on("mousemove", function(d,i) {
                 var tooltip = document.getElementById("tooltip1");
@@ -352,6 +360,16 @@ function initLine(input) {
         return d.year >= startYear && d.year <= endYear;
     })
     
+    var popmax = d3.max(filteredLine, function(d) { return d.population; });
+    var popmin = d3.min(filteredLine, function(d) { return d.population; });
+
+    var outputStartPop = document.getElementById("startpop");
+    var outputEndPop = document.getElementById("endpop");
+
+    outputStartPop.innerHTML = popmin
+    outputEndPop.innerHTML = popmax
+
+
     if (Oilmax != 0) {
         //Add Oil Line
         var oilLine = d3.line()
@@ -492,6 +510,9 @@ function initLine(input) {
                     selectedCountry = d.country;
                     initBar(input);
                     loadScene3();
+                    var outputPopulation3 = document.getElementById("PopulationOutput3")
+
+                    outputPopulation3.innerHTML = selectedPopulation
                 });
     } else {
         console.log("Make a note data not available for Oil")
@@ -615,6 +636,9 @@ function initLine(input) {
                     selectedCountry = d.country;
                     initBar(input);
                     loadScene3();
+                    var outputPopulation3 = document.getElementById("PopulationOutput3")
+
+                    outputPopulation3.innerHTML = selectedPopulation
                 });
     } else {
         console.log("Make a note data not available for Cement")
@@ -739,6 +763,9 @@ function initLine(input) {
                     selectedCountry = d.country;
                     initBar(input);
                     loadScene3();
+                    var outputPopulation3 = document.getElementById("PopulationOutput3")
+
+                    outputPopulation3.innerHTML = selectedPopulation
                 });
     } else {
         console.log("Make a note data not available for Coal")
@@ -863,6 +890,9 @@ function initLine(input) {
                     selectedCountry = d.country;
                     initBar(input);
                     loadScene3();
+                    var outputPopulation3 = document.getElementById("PopulationOutput3")
+
+                    outputPopulation3.innerHTML = selectedPopulation
                 });
     } else {
         console.log("Make a note data not available for Consumption")
@@ -987,6 +1017,9 @@ function initLine(input) {
                     selectedCountry = d.country;
                     initBar(input);
                     loadScene3();
+                    var outputPopulation3 = document.getElementById("PopulationOutput3")
+
+                    outputPopulation3.innerHTML = selectedPopulation
                 });
     } else {
         console.log("Make a note data not available for Flaring")   
@@ -1111,6 +1144,9 @@ function initLine(input) {
                     selectedCountry = d.country;
                     initBar(input);
                     loadScene3();
+                    var outputPopulation3 = document.getElementById("PopulationOutput3")
+
+                    outputPopulation3.innerHTML = selectedPopulation
                 });
     } else {
         console.log("Make a note data not available for Gas")   
@@ -1235,6 +1271,9 @@ function initLine(input) {
                     selectedCountry = d.country;
                     initBar(input);
                     loadScene3();
+                    var outputPopulation3 = document.getElementById("PopulationOutput3")
+
+                    outputPopulation3.innerHTML = selectedPopulation
                 });
     } else {
         console.log("Make a note data not available for Trade")    
@@ -1252,7 +1291,8 @@ function initBar(input) {
     var canvasHeight = height * .5;
 
     var filteredData = input.filter(d => d.country == selectedCountry && d.year == currYear)[0]
-
+    selectedPopulation = filteredData.population;
+    
     let values = [filteredData.oil_co2, filteredData.cement_co2, filteredData.coal_co2, filteredData.consumption_co2, filteredData.flaring_co2, filteredData.gas_co2, filteredData.trade_co2];
 
     var scaleX = d3.scaleBand().domain([0,1,2,3,4,5,6]).range([0,canvasWidth - 175])
@@ -1316,14 +1356,9 @@ function initBar(input) {
                 tooltip.style.position = "absolute"
                 
                 tooltip.style.left = eval((width * .35) + (scaleX.bandwidth() - 25)* i) +"px"
-                tooltip.style.top = eval((height * .65) -scaleY(d) - 50)+"px"
+                tooltip.style.top = eval((height * .65) -scaleY(d) - 25)+"px"
                 
                 tooltip.style.zIndex = 1
-                tooltip.style.backgroundColor = "whitesmoke"
-                tooltip.style.borderColor = "black"
-                tooltip.style.border = "1px";
-                tooltip.style.borderStyle = "solid"
-                tooltip.style.padding = "5px"
                 tooltip.innerHTML = nameCode[i]+ ": "+d;
             })
             .on("mouseout", function(d, i) {
@@ -1454,6 +1489,7 @@ function loadScene3() {
     var year1 = document.getElementById("YearDropdown");
     var outputYear3 = document.getElementById("YearOutput3")
     var country3 = document.getElementById("CountryDropdown3");
+    var outputPopulation3 = document.getElementById("PopulationOutput3")
     var outputCountry3 = document.getElementById("CountryOutput3")
     var countryOutput2 = document.getElementById("CountryOutput2")
     var scene3 = document.getElementById("scene3");
@@ -1465,6 +1501,7 @@ function loadScene3() {
     scene3.scrollIntoView()
     scene3SVG.setAttribute("display", "block");
     outputYear3.innerHTML = currYear;
+    outputPopulation3.innerHTML = selectedPopulation
     year3.value = currYear;
     year1.value = currYear;
     
@@ -1480,6 +1517,8 @@ function loadScene3() {
         year1.value = currYear;
         initScatter(globalData)
         initBar(globalData)
+        outputPopulation3.innerHTML = selectedPopulation
+
     }
 
     country3.oninput = function() {
@@ -1490,6 +1529,7 @@ function loadScene3() {
         selectedCountry = this.value
         initLine(globalData)
         initBar(globalData)
+        outputPopulation3.innerHTML = selectedPopulation
     }
 }
 
