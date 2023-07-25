@@ -155,31 +155,70 @@
 
 
         <!-- Scene 3 -->
-        <div id="scene3" style="width: 100%; top: 200%; position: absolute;">
+        <div id="scene3" style="height:110%; width: 100%; top: 200%; position: absolute;">
             <h1 style="margin-left: 5%;"> Breakdown of <span id="countryTitle3"></span> Co2 Emissions For a Specific Year </h1>
-            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 1%;">About</h2>
-            <div id="scene2AboutContainer" style="border: 5px; border-style: inset; margin-left: 5%; width: 20%; background: whitesmoke; padding: 2%;">
-                <p> Country: <span id="CountryOutput3"></span></span>
-                <p> Year: <span id="YearOutput3"></span></span>
-            </div>
-            <h2 style="margin-left: 5%; padding-bottom: 0px; margin-bottom: 1%;">Filters</h2>
+            <div style="float:left;  margin-left: 5%; width:35%">
+                <div style="float:left; width: 50%;">
+                    <h2 style="padding-bottom: 0px; margin-bottom: 3%;">About</h2>
+                    <div id="scene2AboutContainer" style="width:100%;border: 5px; border-style: inset; background: whitesmoke; padding: 2%;">
+                        <p> Country: <span id="CountryOutput3"></span></p>
+                        <p> Year: <span id="YearOutput3"></span> </p>
+                    </div>
+                </div>
+                <div>
+                    <h2 style="margin-left:58%; padding-bottom: 0px; margin-bottom: 1%;">Key</h2>
+                    <div id="scene3KeyContainer" style="margin-right:5%; float:right; border: 5px; border-style: inset; width: 35%; height: 35%; background-color: whitesmoke;">
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label>Oil Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: cornflowerblue;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Cement Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: darkkhaki;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Coal Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: yellow;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Consumption Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: mediumseagreen;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Flaring Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: orange;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Gas Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: mediumpurple;"></div>
+                        </div>
+                        <div style="float:left; width:100%">
+                            <strong style="float:left; margin-left:5%;margin-top:5%;"><label> Trade Co2</label></strong>
+                            <div style="float:right; margin-right:15%; padding: 5%; margin-top: 5%; margin-bottom: 5%; background-color: tomato;"></div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div style="float:left; width: 55%;">
+                    <h2 style="padding-bottom: 0px; margin-bottom: 3%;">Filters</h2>
+                    <div style="width:85%; float: left; background: whitesmoke; padding: 5%;border: 5px; border-style: inset;">
+                        <div id="filterDropdown3" >
+                            <p>Filter by Year</p>
+                            <select id="YearDropdown3">
+                            </select>
+                        </div>
+                        <div style="float: left;">
+                            <p>Filter by Country</p>
+                            <select id="CountryDropdown3">
+                            </select>
+                        </div>
+                    </div>
+                </div>
             <div id="tooltip3">
-            </div>
-            <div id="filterDropdown3" style="margin-left: 5%; float:left; width:17%; background: whitesmoke; padding: 3%; border: 5px; border-style: inset;">
-                <div style="float: left;">
-                    <p>Filter by Year</p>
-                    <select id="YearDropdown3">
-                    </select>
-                </div>
-                <div style="float: left;">
-                    <p>Filter by Country</p>
-                    <select id="CountryDropdown3">
-                    </select>
-                </div>
             </div>
         </div>
 
-        <svg id="scene3svg" width="65%" height="80%" style="top: 210%; position: absolute; left: 35%; margin-bottom: 15%">
+        <svg id="scene3svg" width="58%" height="70%" style="top: 10%; position: absolute; left: 40%; margin-bottom: 15%">
         </svg>
 
     </body>
