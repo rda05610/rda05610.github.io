@@ -426,7 +426,7 @@ function initLine(input) {
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
                         tooltip2x.style.top = eval((height * .4+55) - (((height * .4 + 5) - scaleY(d.oil_co2)+5)/2))+"px"
                         tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .90 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
@@ -555,7 +555,7 @@ function initLine(input) {
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
                         tooltip2x.style.top = eval((height * .4+55) - (((height * .4 + 5) - scaleY(d.cement_co2)+5)/2))+"px"
                         tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .90 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
@@ -679,7 +679,7 @@ function initLine(input) {
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
                         tooltip2x.style.top = eval((height * .4+55) - (((height * .4 + 5) - scaleY(d.coal_co2)+5)/2))+"px"
                         tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .90 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
@@ -803,7 +803,7 @@ function initLine(input) {
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
                         tooltip2x.style.top = eval((height * .4+55) - (((height * .4 + 5) - scaleY(d.consumption_co2)+5)/2))+"px"
                         tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .90 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
@@ -927,7 +927,7 @@ function initLine(input) {
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
                         tooltip2x.style.top = eval((height * .4+55) - (((height * .4 + 5) - scaleY(d.flaring_co2)+5)/2))+"px"
                         tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .90 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
@@ -1051,7 +1051,7 @@ function initLine(input) {
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
                         tooltip2x.style.top = eval((height * .4+55) - (((height * .4 + 5) - scaleY(d.gas_co2)+5)/2))+"px"
                         tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .90 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
@@ -1175,7 +1175,7 @@ function initLine(input) {
                         tooltip2x.style.left = eval(d3.event.clientX+10)+"px"
                         tooltip2x.style.top = eval((height * .4+55) - (((height * .4 + 5) - scaleY(d.trade_co2)+5)/2))+"px"
                         tooltip2y.style.left = eval((width*.35)+((scaleX(d.year)-5) - (marginx-5))/2)+"px"
-                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .80 + 15))+"px"
+                        tooltip2y.style.top = eval(d3.event.clientY-50)+(window.scrollY-(height * .90 + 15))+"px"
 
                         tooltip2x.hidden = false
                         tooltip2x.style.opacity = 1;
