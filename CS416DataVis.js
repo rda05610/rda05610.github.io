@@ -1312,7 +1312,7 @@ function initBar(input) {
         .ticks(5))
     d3.select('#scene3svg')
         .append('g')
-        .attr("transform","translate("+eval(marginx)+","+eval((height*.45+marginy*2 - 5))+")")
+        .attr("transform","translate("+eval(marginx)+","+eval((height*.45+marginy*2))+")")
         .call(d3
             .axisBottom()
             .scale(scaleX)
