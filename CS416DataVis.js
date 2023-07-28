@@ -24,6 +24,8 @@ let selectedCountry;
 //Population
 let selectedPopulation;
 
+let isScene3Loaded = false;
+
 async function init() {
    
     hideScene1()
@@ -292,8 +294,10 @@ function initScatter(input) {
                     countryOutput2.innerHTML = d.country;
                     outputCountry3.innerHTML = d.country;  
                     
-                    initBar(input);
-                    loadScene3();
+                    if (isScene3Loaded){ 
+                        initBar(input);
+                        loadScene3();
+                    }
 
                     initLine(input);
                     loadScene2();
@@ -1496,7 +1500,7 @@ function loadScene3() {
     var scene3SVG = document.getElementById("scene3svg")
     var countryTitle2 = document.getElementById("countryTitle2")
     var countryTitle3 = document.getElementById("countryTitle3")
-
+    isScene3Loaded = true
     scene3.hidden = false;
     scene3.scrollIntoView()
     scene3SVG.setAttribute("display", "block");
